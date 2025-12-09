@@ -1,6 +1,5 @@
 import { pool } from "../../config/db";
 import { helperService } from "../../helper/user.helper.service";
-import { Role } from "../../types/roles.type";
 
 const getAllUsers = async () => {
   const result = await pool.query(`

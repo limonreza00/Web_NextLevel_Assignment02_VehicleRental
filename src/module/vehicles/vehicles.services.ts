@@ -1,5 +1,4 @@
 import { pool } from "../../config/db";
-import { VehiclePayload } from "../../types/vehicles.type";
 
 const insertVehicles = async (
   vehicle_name: string,
