@@ -27,7 +27,7 @@ app.use("/", loginRoutes);
 
 app.use("/", vehicleRoutes);
 
-app.use("/api/v1", userRoutes);
+app.use("/", userRoutes);
 
 app.use("/", bookingsRoutes);
 
