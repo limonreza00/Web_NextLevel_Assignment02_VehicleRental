@@ -65,6 +65,8 @@ const insertBooking = async (payload: Record<string, unknown>) => {
 };
 
 const getAllbookings = async () => {
+  markExpiredBookingsAsReturned();
+
   const result = await pool.query(`
         SELECT * FROM bookings;
         `);
@@ -105,6 +107,26 @@ const deleteBookingById = async (id: number) => {
   return result;
 };
 
+const markExpiredBookingsAsReturned = async () => {
+  const currentDate = new Date();
+
+  const result = await pool.query(
+    `
+      UPDATE bookings
+      SET status = 'returned'
+      WHERE status = 'active' AND rent_end_date < $1
+      RETURNING id, vehicle_id;
+      `,
+    [currentDate]
+  );
+
+  for (const booking of result.rows) {
+    await updateVehicleAvailability(booking.vehicle_id, "available");
+  }
+
+  return result.rows;
+};
+
 export const bookingServices = {
   insertBooking,
   getAllbookings,
@@ -112,4 +134,5 @@ export const bookingServices = {
   updateBookingStatus,
   updateVehicleAvailability,
   deleteBookingById,
+  markExpiredBookingsAsReturned,
 };

@@ -135,7 +135,12 @@ const updateBooking = async (req: Request, res: Response) => {
         "cancelled"
       );
 
-      // 2. Update vehicle availability
+      if (!updatedBooking) {
+        return res.status(500).json({
+          success: false,
+          message: "Failed to update booking status",
+        });
+      }
       const vehicleInfo = await bookingServices.updateVehicleAvailability(
         booking.vehicle_id,
         "available"
